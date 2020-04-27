@@ -6,7 +6,7 @@ exec ros -Q -- $0 "$@"
 
 ;cmucl crashes with silent on
 (ql:quickload '(:ci-utils/utils) :silent (not (member :cmu *features*)))
-(quickload '(:ci-utils/coveralls :iterate)
+(ci-utils/utils:quickload '(:ci-utils/coveralls :iterate)
            :silent (not (member :cmu *features*)))
 
 (defpackage :ros.script.run-test-forms
