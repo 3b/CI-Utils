@@ -1,6 +1,6 @@
 (uiop:define-package :ci-utils/utils
   (:use :cl)
-  (:export #:quickload #:with-fail-on-error #:without-asdf-bad-system))
+  (:export #:quickload #:with-fail-on-errors #:without-asdf-bad-system))
 
 (in-package :ci-utils/utils)
 

@@ -64,6 +64,6 @@ Options
          (unless
           (loop for form in forms
                 do (format t "evaluating ~s~% = " form)
-                every (with-fail-on-errors (:code 2)
-                        (print (eval (read-from-string form)))))
+                always (with-fail-on-errors (:code 2)
+                         (print (eval (read-from-string form)))))
            (uiop:quit 1)))))))

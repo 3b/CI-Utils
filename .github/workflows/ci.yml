@@ -28,43 +28,43 @@ jobs:
 
           # should fail
 
-          roswell/run-test-forms.ros -l ci-utils-test-system "(ci-utils-test-system:return-nil)"
+          roswell/run-test-forms.ros -l ci-utils-test-systems "(ci-utils-test-system:return-nil)"
           if [ $? -eq 1 ] then echo OK: $? else echo BAD: $? ; exit 1 fi
-          roswell/run-test-forms.ros -l ci-utils-test-system "(ci-utils-test-system:return-x nil)"
+          roswell/run-test-forms.ros -l ci-utils-test-systems "(ci-utils-test-system:return-x nil)"
           if [ $? -eq 1 ] then echo OK: $? else echo BAD: $? ; exit 1 fi
-          roswell/run-test-forms.ros -l ci-utils-test-system "(ci-utils-test-system:return-not-x 123)"
+          roswell/run-test-forms.ros -l ci-utils-test-systems "(ci-utils-test-system:return-not-x 123)"
           if [ $? -eq 1 ] then echo OK: $? else echo BAD: $? ; exit 1 fi
 
           # should succeed
 
-          roswell/run-test-forms.ros -l ci-utils-test-system "(ci-utils-test-system:return-t)"
+          roswell/run-test-forms.ros -l ci-utils-test-systems "(ci-utils-test-system:return-t)"
           if [ $? -eq 0 ] then echo OK: $? else echo BAD: $? ; exit 1 fi
 
-          roswell/run-test-forms.ros -l ci-utils-test-system "(ci-utils-test-system:return-x 123)"
+          roswell/run-test-forms.ros -l ci-utils-test-systems "(ci-utils-test-system:return-x 123)"
           if [ $? -eq 0 ] then echo OK: $? else echo BAD: $? ; exit 1 fi
 
-          roswell/run-test-forms.ros -l ci-utils-test-system "(ci-utils-test-system:return-not-x nil)"
+          roswell/run-test-forms.ros -l ci-utils-test-systems "(ci-utils-test-system:return-not-x nil)"
           if [ $? -eq 0 ] then echo OK: $? else echo BAD: $? ; exit 1 fi
 
           # should error
 
-          roswell/run-test-forms.ros -l ci-utils-test-system "(:incomplete-form"
+          roswell/run-test-forms.ros -l ci-utils-test-systems "(:incomplete-form"
           if [ $? -eq 2 ] then echo OK else exit 1 fi
 
-          roswell/run-test-forms.ros -l ci-utils-test-system '(error "error!")'
+          roswell/run-test-forms.ros -l ci-utils-test-systems '(error "error!")'
           if [ $? -eq 2 ] then echo OK else exit 1 fi
 
           # dependency should error
-          roswell/run-test-forms.ros -l ci-utils-test-system/compile-error "(ci-utils-test-system:return-t)"
+          roswell/run-test-forms.ros -l ci-utils-test-systems/compile-error "(ci-utils-test-system:return-t)"
           if [ $? -eq 3 ] then echo OK else exit 1 fi
 
-          roswell/run-test-forms.ros -l ci-utils-test-system/load-error "(ci-utils-test-system:return-t)"
+          roswell/run-test-forms.ros -l ci-utils-test-systems/load-error "(ci-utils-test-system:return-t)"
           if [ $? -eq 3 ] then echo OK else exit 1 fi
 
-          roswell/run-test-forms.ros -l ci-utils-test-system/compile-warn "(ci-utils-test-system:return-t)"
+          roswell/run-test-forms.ros -l ci-utils-test-systems/compile-warn "(ci-utils-test-system:return-t)"
           if [ $? -eq 3 ] then echo OK else exit 1 fi
 
           # should succeed?
-          roswell/run-test-forms.ros -l ci-utils-test-system/load-warn "(ci-utils-test-system:return-t)"
+          roswell/run-test-forms.ros -l ci-utils-test-systems/load-warn "(ci-utils-test-system:return-t)"
           if [ $? -eq 0 ] then echo OK else exit 1 fi
 
