@@ -88,7 +88,7 @@ jobs:
           check $? 3
 
           roswell/run-test-forms.ros -l ci-utils-test-systems/compile-warn "(ci-utils-test-system:return-t)"
-          check $? 0
+          check $? 3
 
           # should succeed?
           roswell/run-test-forms.ros -l ci-utils-test-systems/warn "(ci-utils-test-system:return-t)"
