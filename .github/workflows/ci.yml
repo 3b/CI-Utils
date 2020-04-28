@@ -28,60 +28,65 @@ jobs:
           # put test systems where asdf can find them
           cp -av t ~/lisp/
 
+          function check () {
+            # $1 = actual, $2 = expected
+            echo -n Got $1, expected $2:
+            if [ $1 -eq $2 ] ; then echo OK ; else echo BAD ; exit 1 ; fi
+          }
           # should fail
 
           roswell/run-test-forms.ros -l ci-utils-test-systems "(ci-utils-test-system:return-nil)"
-          X=$?
-          if [ $X -eq 1 ] ; then echo OK: $X ; else echo BAD: $X ; exit 1 ; fi
+          check $? 1
+
           roswell/run-test-forms.ros -l ci-utils-test-systems "(ci-utils-test-system:return-x nil)"
-          X=$?
-          if [ $X -eq 1 ] ; then echo OK: $X ; else echo BAD: $X ; exit 1 ; fi
+          check $? 1
+
           roswell/run-test-forms.ros -l ci-utils-test-systems "(ci-utils-test-system:return-not-x 123)"
-          X=$?
-          if [ $X -eq 1 ] ; then echo OK: $X ; else echo BAD: $X ; exit 1 ; fi
+          check $? 1
+
+          roswell/run-test-forms.ros -l ci-utils-test-systems "(ci-utils-test-system:return-not-x nil)" "(ci-utils-test-system:return-nil)" "(zerop (random 2))"
+          check $? 1
 
           # should succeed
 
           roswell/run-test-forms.ros -l ci-utils-test-systems "(ci-utils-test-system:return-t)"
-          X=$?
-          if [ $X -eq 0 ] ; then echo OK: $X ; else echo BAD: $X ; exit 1 ; fi
+          check $? 0
 
           roswell/run-test-forms.ros -l ci-utils-test-systems "(ci-utils-test-system:return-x 123)"
-          X=$?
-          if [ $X -eq 0 ] ; then echo OK: $X ; else echo BAD: $X ; exit 1 ; fi
+          check $? 0
 
           roswell/run-test-forms.ros -l ci-utils-test-systems "(ci-utils-test-system:return-not-x nil)"
-          X=$?
-          if [ $X -eq 0 ] ; then echo OK: $X ; else echo BAD: $X ; exit 1 ; fi
+          check $? 0
 
           roswell/run-test-forms.ros -l ci-utils-test-systems "(ci-utils-test-system:return-not-x nil)" "(ci-utils-test-system:return-t)" "(not (minusp (random 10)))"
-          X=$?
-          if [ $X -eq 0 ] ; then echo OK: $X ; else echo BAD: $X ; exit 1 ; fi
+          check $? 0
 
           # should error
 
           roswell/run-test-forms.ros -l ci-utils-test-systems "(:incomplete-form"
-          X=$?
-          if [ $X -eq 2 ] ; then echo OK: $X ; else echo BAD: $X ; exit 1 ; fi
+          check $? 2
 
           roswell/run-test-forms.ros -l ci-utils-test-systems '(error "error!")'
-          X=$?
-          if [ $X -eq 2 ] ; then echo OK: $X ; else echo BAD: $X ; exit 1 ; fi
+          check $? 2
+
+          roswell/run-test-forms.ros -l ci-utils-test-systems "(ci-utils-test-system:return-not-x nil)" "(ci-utils-test-system:return-x 2)" '(error "error!")' "(zerop (random 2))"
+          check $? 3
+
 
           # dependency should error
           roswell/run-test-forms.ros -l ci-utils-test-systems/compile-error "(ci-utils-test-system:return-t)"
-          X=$?
-          if [ $X -eq 3 ] ; then echo OK: $X ; else echo BAD: $X ; exit 1 ; fi
+          check $? 3
 
           roswell/run-test-forms.ros -l ci-utils-test-systems/load-error "(ci-utils-test-system:return-t)"
-          X=$?
-          if [ $X -eq 3 ] ; then echo OK: $X ; else echo BAD: $X ; exit 1 ; fi
+          check $? 3
 
           roswell/run-test-forms.ros -l ci-utils-test-systems/compile-warn "(ci-utils-test-system:return-t)"
-          X=$?
-          if [ $X -eq 3 ] ; then echo OK: $X ; else echo BAD: $X ; exit 1 ; fi
+          check $? 3
 
           # should succeed?
           roswell/run-test-forms.ros -l ci-utils-test-systems/load-warn "(ci-utils-test-system:return-t)"
-          X=$?
-          if [ $X -eq 0 ] ; then echo OK: $X ; else echo BAD: $X ; exit 1 ; fi
+          check $? 0
+
+
+          echo done...
+          exit 0
