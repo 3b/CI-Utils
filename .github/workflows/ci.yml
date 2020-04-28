@@ -32,8 +32,13 @@ jobs:
 
           function check () {
             # $1 = actual, $2 = expected
-            echo -n Got $1, expected $2:
-            if [ $1 -eq $2 ] ; then echo OK ; else (( fail++ )) ;echo BAD $fail ; fi
+            if [ $1 -eq $2 ]
+            then
+              echo -e "\033[0;32mGot $1, expected $2: OK\033[0m"
+            else
+              (( fail++ ))
+              echo -e "\033[0;31mGot $1, expected $2: BAD $fail\033[0m"
+            fi
           }
           # should fail
 
@@ -91,11 +96,12 @@ jobs:
 
 
           echo done...
-          echo $fail failures
 
           if [ $fail -eq 0 ]
           then
+            echo -e "\033[0;32m$fail failures\033[0m"
             exit 0
           else
+            echo -e "\033[0;31m$fail failures\033[0m"
             exit 1
           fi
