@@ -9,7 +9,9 @@
   any error"
   `(handler-bind ((error (lambda (&optional e)
                            (format t "caught error ~s~%~a~%" e e)
-                           (uiop:print-condition-backtrace e)
+                           (uiop:print-condition-backtrace
+                            e :stream *standard-output*)
+                           (finish-output)
                            (uiop:quit ,code))))
      (progn ,@body)))
 

@@ -28,10 +28,12 @@ jobs:
           # put test systems where asdf can find them
           cp -av t ~/lisp/
 
+          fail=0
+
           function check () {
             # $1 = actual, $2 = expected
             echo -n Got $1, expected $2:
-            if [ $1 -eq $2 ] ; then echo OK ; else echo BAD ; exit 1 ; fi
+            if [ $1 -eq $2 ] ; then echo OK ; else (( fail++ )) ;echo BAD $fail ; fi
           }
           # should fail
 
@@ -89,4 +91,11 @@ jobs:
 
 
           echo done...
-          exit 0
+          echo $fail failures
+
+          if [ $fail -eq 0 ]
+          then
+            exit 0
+          else
+            exit 1
+          fi
