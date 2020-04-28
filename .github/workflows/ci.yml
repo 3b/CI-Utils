@@ -18,7 +18,8 @@ jobs:
           LISP: ${{ matrix.lisp }}
         run: |
           curl -L https://raw.githubusercontent.com/roswell/roswell/master/scripts/install-for-ci.sh | sh
-      - name: Run tests
+
+      - name: Run-fiveam tests
         run: roswell/run-fiveam.ros -l ci-utils/test :github-actions-tests :noncoveralls-tests :base-tests
 
       - name: Run-test-forms tests
@@ -96,6 +97,50 @@ jobs:
 
 
           echo done...
+
+          if [ $fail -eq 0 ]
+          then
+            echo -e "\033[0;32m$fail failures\033[0m"
+            exit 0
+          else
+            echo -e "\033[0;31m$fail failures\033[0m"
+            exit 1
+          fi
+
+
+      - name: Run-parachute tests
+        # specify shell without -e since we want to check non-0 exits manually
+        shell: bash {0}
+        run: |
+          fail=0
+
+          function check () {
+            # $1 = actual, $2 = expected
+            if [ $1 -eq $2 ]
+            then
+              echo -e "\033[0;32mGot $1, expected $2: OK\033[0m"
+            else
+              (( fail++ ))
+              echo -e "\033[0;31mGot $1, expected $2: BAD $fail\033[0m"
+            fi
+          }
+
+          # should pass
+          roswell/run-parachute.ros -l ci-utils/test-parachute :github-actions-tests :noncoveralls-tests :base-tests
+          check $? 0
+
+          # should fail
+          roswell/run-parachute.ros -l ci-utils/test-parachute :failing-tests
+          check $? 1
+
+          # should error
+          roswell/run-parachute.ros -l ci-utils/test-parachute :error-tests
+          check $? 2
+
+          roswell/run-parachute.ros -l ci-utils-test-systems/error
+          check $? 3
+
+          echo done ...
 
           if [ $fail -eq 0 ]
           then

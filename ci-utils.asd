@@ -37,6 +37,19 @@
   :perform (test-op (o c) (symbol-call '#:fiveam '#:run! '(:user-tests
                                                            :noncoveralls-tests))))
 
+(defsystem "ci-utils/test-parachute"
+  :description "Test for CI-Utils"
+  :author "Neil Lindquist <NeilLindquist5@gmail.com>"
+  :license "MIT"
+  :depends-on ("ci-utils"
+               "ci-utils/coveralls"
+               "parachute"
+               "split-sequence")
+  :pathname "t"
+  :components ((:file "tests-parachute"))
+  :perform (test-op (o c) (symbol-call '#:parachute '#:test
+                                       '(:user-tests :noncoveralls-tests))))
+
 (defsystem "ci-utils/utils"
   :description "Extra utilities for CI-Utils roswell scripts"
   :license "MIT"
