@@ -22,6 +22,8 @@ jobs:
         run: roswell/run-fiveam.ros -l ci-utils/test :github-actions-tests :noncoveralls-tests :base-tests
 
       - name: Run-test-forms tests
+        # specify shell without -e since we want to check non-0 exits manually
+        shell: bash {0}
         run: |
           # put test systems where asdf can find them
           cp -av t ~/lisp/
@@ -67,4 +69,3 @@ jobs:
           # should succeed?
           roswell/run-test-forms.ros -l ci-utils-test-systems/load-warn "(ci-utils-test-system:return-t)"
           if [ $? -eq 0 ] then echo OK else exit 1 fi
-
