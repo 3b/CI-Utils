@@ -63,7 +63,9 @@ Options
        (ci-utils/coveralls:with-coveralls excluded
          (unless
           (loop for form in forms
-                do (format t "evaluating ~s~% = " form)
-                always (with-fail-on-errors (:code 2)
-                         (print (eval (read-from-string form)))))
+                do (format t "evaluating ~s~% =  " form)
+                always (let ((r (with-fail-on-errors (:code 2)
+                                  (eval (read-from-string form)))))
+                         (format t " ~s~%" r)
+                         r))
            (uiop:quit 1)))))))
